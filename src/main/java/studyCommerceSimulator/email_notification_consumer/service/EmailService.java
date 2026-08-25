@@ -13,6 +13,7 @@ public class EmailService {
 
     @Retry(name = "emailService", fallbackMethod = "sendEmailFallback")
     public void sendEmail(OrderCreatedEvent event){
+
         // Simula 40% de chance do "provedor de email" falhar
         if(random.nextInt(10) < 4){
             throw new RuntimeException("Provedor de email indisponível no momento");
