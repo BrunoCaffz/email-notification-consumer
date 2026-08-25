@@ -3,9 +3,16 @@ package studyCommerceSimulator.email_notification_consumer.listener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import studyCommerceSimulator.email_notification_consumer.event.OrderCreatedEvent;
+import studyCommerceSimulator.email_notification_consumer.service.EmailService;
 
 @Component
 public class OrderCreatedListener {
+
+    private final EmailService emailService;
+
+    public OrderCreatedListener(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     /*
     * serve para transformar um metodo comum em um consumidor automatico de mensagens
@@ -14,9 +21,6 @@ public class OrderCreatedListener {
     * */
     @KafkaListener(topics = "pedido-criado", groupId = "email-notification-group")
     public void handleOrderCreated(OrderCreatedEvent event) {
-        System.out.println("Email enviado para o cliente " + event.customerId()
-                + " sobre o pedido #" + event.orderId()
-                + " no valor de R$ " + event.totalAmount());
+        emailService.sendEmail(event);
     }
-
 }
